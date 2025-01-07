@@ -2,7 +2,7 @@
 
 # デフォルト値
 EXECUTABLE=""
-RUN_COUNT=10
+RUN_COUNT=1
 OUTPUT_FILE="output.csv"
 OUTPUT_DIR="dist"
 
@@ -10,7 +10,7 @@ OUTPUT_DIR="dist"
 usage() {
   echo "Usage: $0 -e <executable> [-c <run_count>] [-o <output_file>]"
   echo "  -e: 実行するファイルのパス (必須)"
-  echo "  -c: 実行回数 (デフォルト: 10)"
+  echo "  -c: 実行回数 (デフォルト: $RUN_COUNT)"
   echo "  -o: 出力CSVファイル名 (デフォルト: output.csv)"
   exit 1
 }
@@ -56,17 +56,20 @@ echo "# Elapsed Time(sec),System Time(sec),User Time(sec),CPU Usage(%),MaxMemory
 # 指定回数実行
 for (( i=1; i<=RUN_COUNT; i++ )); do
   # /usr/bin/timeで実行し、出力を解析
-  OUTPUT=$(gtime -f "%e %U %S %M" "$EXECUTABLE" 2>&1 >/dev/null)
+  OUTPUT=$(gtime -f "%e %U %S %M %P" "$EXECUTABLE" 2>&1 >/dev/null)
 
   # 出力結果を分割して取得
-  REAL_TIME=$(echo "$OUTPUT" | awk '{print $1}')    # 経過時間 (Elapsed time)
-  USER_TIME=$(echo "$OUTPUT" | awk '{print $2}')    # ユーザーモード時間 (User CPU time)
-  SYS_TIME=$(echo "$OUTPUT" | awk '{print $3}')     # システムモード時間 (System CPU time)
-  MEMORY=$(echo "$OUTPUT" | awk '{print $4}')       # メモリ最大使用量 (Maximum resident set size)
-  MEMORY_MB=$(echo "scale=2; $MEMORY / 1024" | bc)
+  REAL_TIME=$(echo "$OUTPUT" | awk '{print $1}')
+  USER_TIME=$(echo "$OUTPUT" | awk '{print $2}')
+  SYS_TIME=$(echo "$OUTPUT" | awk '{print $3}')
+  MEMORY_RAW=$(echo "$OUTPUT" | awk '{print $4}')
+  CPU_USAGE_RAW=$(echo "$OUTPUT" | awk '{print $5}')
 
-  # CPU利用率を計算
-  CPU_USAGE=$(echo "scale=2; ($USER_TIME + $SYS_TIME) / $REAL_TIME * 100" | bc)
+  # メモリを MB 単位に変換する
+  MEMORY_MB=$(echo "scale=2; $MEMORY_RAW / 1024" | bc)
+
+  # CPU_USAGE_RAWから単位（%）を取り除く
+  CPU_USAGE=$(echo "$CPU_USAGE_RAW" | sed 's/%//')
 
   # 結果を配列に格納
   real_time_list+=("$REAL_TIME")
