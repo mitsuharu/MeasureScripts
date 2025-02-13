@@ -9,3 +9,6 @@ swiftc -O ./src/code1.swift -o dist/code1_opt
 
 swiftc -Onone ./src/code2.swift -o dist/code2
 swiftc -O ./src/code2.swift -o dist/code2_opt
+
+# 計測
+swiftc -Onone ./src/measure/measure.swift  -o dist/measure
