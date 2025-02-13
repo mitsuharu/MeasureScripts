@@ -159,7 +159,7 @@ for trial in 1...trialCount {
     results.append(trialResult)
 
     print(
-        "試行 \(trial) 完了: 実行時間 \(String(format: "%.3f", execTime)) 秒, 最大 CPU \(maxCpuObserved)% , 最大メモリ \(maxMemoryObserved) KB"
+        "試行 \(trial) 完了: 実行時間 \(String(format: "%.3f", execTime)) 秒, 最大 CPU \(maxCpuObserved)% , 最大メモリ \(maxMemoryObserved / 1000.0) MB"
     )
 }
 
@@ -172,7 +172,7 @@ let avgMemory = results.reduce(0.0) { $0 + $1.maxMemory } / totalTrials
 print("\n--- 平均結果 (\(results.count) 試行) ---")
 print("平均実行時間: \(String(format: "%.3f", avgTime)) 秒")
 print("平均最大 CPU 使用率: \(String(format: "%.2f", avgCpu))%")
-print("平均最大メモリ使用量: \(String(format: "%.0f", avgMemory / 1_000)) MB")
+print("平均最大メモリ使用量: \(String(format: "%.2f", avgMemory / 1_000.0)) MB")
 
 // MARK: - CSV 形式でファイルに出力
 var csvText = "Trial,ExecutionTime(sec),MaxCPU(%),MaxMemory(KB)\n"
