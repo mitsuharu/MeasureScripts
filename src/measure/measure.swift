@@ -144,8 +144,8 @@ for trial in 1...trialCount {
     // プロセスが終了するまで、0.1秒間隔で ps コマンドにより CPU とメモリを監視
     while process.isRunning {
         if let stats = getProcessStats(pid: pid) {
-            if stats.cpu > maxCpuObserved { maxCpuObserved = stats.cpu }
-            if stats.rss > maxMemoryObserved { maxMemoryObserved = stats.rss }
+            maxCpuObserved = max(maxCpuObserved, stats.cpu)
+            maxMemoryObserved = max(maxMemoryObserved, stats.rss)
         }
         usleep(100_000)  // 100ミリ秒待機
     }
