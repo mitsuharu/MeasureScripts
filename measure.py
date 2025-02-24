@@ -32,7 +32,7 @@ def monitor_process(executable_path):
         max_memory_usage = max(max_memory_usage, memory_info)
 
         # オプション: リアルタイムで表示 (必要に応じて削除可能)
-        print(f"CPU Usage: {cpu_usage}%, Memory Usage: {(memory_info - initial_memory) / (1024 ** 2):.2f} MB")
+        # print(f"CPU Usage: {cpu_usage}%, Memory Usage: {(memory_info - initial_memory) / (1024 ** 2):.2f} MB")
 
     end_time = time.time()
 
@@ -48,7 +48,18 @@ def monitor_process(executable_path):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Monitor CPU and memory usage of an executable.")
-    parser.add_argument("executable", help="Path to the executable file")
+    
+    # `-e` or `--exe` のオプション (実行ファイルのパス)
+    parser.add_argument("-e", "--exe", required=True, help="Path to the executable file")
+    
+    # `-c` or `--count` のオプション (数値)
+    parser.add_argument("-c", "--count", type=int, required=False, help="Number of iterations")
+
+    # 引数をパース
     args = parser.parse_args()
 
-    monitor_process(args.executable)
+    # 受け取った値の表示
+    print(f"Executable Path: {args.exe}")
+    print(f"Count: {args.count}")
+
+    monitor_process(args.exe)
