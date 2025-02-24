@@ -1,5 +1,10 @@
 import Foundation
 
+/*
+./dist/measure -e /bin/ls
+
+*/
+
 // MARK: - 引数のパース
 
 // デフォルト値
@@ -148,8 +153,7 @@ for trial in 1...trialCount {
     // プロセスの終了を待機（念のため）
     process.waitUntilExit()
 
-    let endTime = Date()
-    let execTime = endTime.timeIntervalSince(startTime)
+    let execTime = Date().timeIntervalSince(startTime)
 
     // 試行結果を保存
     let trialResult = TrialResult(
